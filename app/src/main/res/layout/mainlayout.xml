@@ -17,14 +17,14 @@
 
     <TextView
         android:id="@+id/picturetextView"
-        android:layout_width="191dp"
-        android:layout_height="wrap_content"
+        android:layout_width="72dp"
+        android:layout_height="24dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="54dp"
-        android:layout_marginLeft="54dp"
-        android:layout_marginTop="147dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="85dp"
         android:text="TextView"
         android:textSize="18dp"
         android:textStyle="bold" />

@@ -80,6 +80,25 @@ public class selection extends AppCompatActivity {
         SelfListView = findViewById(R.id.listview);
         SelfListView.setAdapter(selfSpq);
 
+
+            Intent data=getIntent();
+            if(data.getIntExtra("State",-1) == 1){
+
+                Bundle bundle = data.getExtras();
+                AllData date1 = (AllData) bundle.getSerializable("cc");
+                EditText title=findViewById(R.id.title_name);
+                title.setText(date1.getTitleStr());
+                EditText tip=findViewById(R.id.tipname);
+                tip.setText(date1.getTipStr());
+                Toast.makeText(selection.this,date1.getPicture_Str()+"333333333",Toast.LENGTH_SHORT).show();
+                selfItem.get(0).setSmalltext(date1.getTimeStr());
+                selfSpq.notifyDataSetChanged();
+            }
+
+
+
+
+
 //短按
 
 
@@ -138,7 +157,10 @@ public class selection extends AppCompatActivity {
             public void onClick(View v){
                 //Intent是一种运行时绑定（run-time binding）机制，它能在程序运行过程中连接两个不同的组件。
                 // 在存放资源代码的文件夹下下，
-              finish();           }           });
+                setResult(-2);
+              finish();
+            }
+        });
 //确认新添的点击事件
         FloatingActionButton yesButton=findViewById(R.id.yesButton);
         yesButton.setOnClickListener(new View.OnClickListener(){
@@ -179,6 +201,8 @@ public class selection extends AppCompatActivity {
         });
     }
 
+
+
     private class spq extends ArrayAdapter<Item> {
         private  int resourceId;
 
@@ -207,7 +231,7 @@ public class selection extends AppCompatActivity {
             return item;
         }
     }
-
+//显示时间选择器
     public void showDatePickDlg () {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(selection.this, new DatePickerDialog.OnDateSetListener() {
@@ -256,7 +280,7 @@ public class selection extends AppCompatActivity {
     },calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE),true);
     timePickerDialog.show();
 }*/
-
+//长按
 public void Long()
 {
     Dialog dia;
@@ -348,5 +372,7 @@ public void Long()
             }
 
         }
+
+
     }
 }
