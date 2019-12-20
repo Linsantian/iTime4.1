@@ -84,7 +84,11 @@ public class selection extends AppCompatActivity {
         SelfListView.setAdapter(selfSpq);
 
 
-            Intent data=getIntent();
+        Intent data=getIntent();
+        if(data.getIntExtra("color", -1)!=0) {
+            ImageView imageView = findViewById(R.id.layout_background);
+            imageView.setBackgroundColor(data.getIntExtra("color", -1));
+        }
             if(data.getIntExtra("State",-1) == 1){
 
                 Bundle bundle = data.getExtras();
@@ -179,15 +183,21 @@ public class selection extends AppCompatActivity {
                 Date_ymd=(String)textview.getText();
                 //产生随机数
                 Random random = new Random();
-                int a_after_number=random.nextInt(1);
+                int a_after_number=random.nextInt(10)+1;
                 String picture_code = "a"+a_after_number;
                 Intent i = new Intent();
 
                 allData.setTitleStr(titleStr);
                 allData.setTipStr(tipStr);
-                allData.setTimeStr(Date_ymd);
+
                 allData.setPicture_Str(picture_code);
+                if(date==null) {
+                    Calendar cal = Calendar.getInstance();
+                    date = new Date((cal.get(Calendar.YEAR) - 1900), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+                    Date_ymd=cal.get(Calendar.YEAR)+"年"+(cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH)+"日"+" "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.SECOND);
+                }
                 allData.setDate(date);
+                allData.setTimeStr(Date_ymd);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("aa",(Serializable) allData);
 

@@ -1,16 +1,23 @@
 package com.example.itime4;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -29,6 +36,7 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,16 +56,22 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<View> pager_arraylist = new ArrayList<>();
     private ArrayList<mainitem> selfItem = new ArrayList<>();
     private viewpagerAdapter self_pagerAdapter = new viewpagerAdapter(pager_arraylist);
-    ArrayList<AllData> theDatas = new ArrayList<>();
+    ArrayList<AllData> theDatas=new ArrayList<>();
     Bundle bundle;
     CountDownTimer downTimer,downTimer2;
     private ListView SelfListView;
     private ViewPager Selfviewpager;
     String countdownTip="还有";
     MainActivity.mainAdapter selfSpq;
-    int PictureResource=0;
+    int PictureResource=0,color_choose=0;
     private  ArrayList<Time> timeArrayList=new ArrayList<>();
-    Time time_viewpager=new Time();
+    Toolbar toolbar;
+    FloatingActionButton fab;
+    DrawerLayout drawer;
+    SaveData saveData;
+
+    //Time time_viewpager=new Time();
+
 
 
 
@@ -65,9 +79,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        //InitData();
+        drawer = findViewById(R.id.drawer_layout);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         selfSpq = new MainActivity.mainAdapter(this,R.layout.mainlayout,selfItem);
         SelfListView = findViewById(R.id.mainlistview);
@@ -82,18 +97,58 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
         //设置新添键的点击事件
-        FloatingActionButton fab=findViewById(R.id.fab);
+        fab=findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Intent是一种运行时绑定（run-time binding）机制，它能在程序运行过程中连接两个不同的组件。
                 // 在存放资源代码的文件夹下下，
                 Intent i = new Intent(MainActivity.this, selection.class);
+                i.putExtra("color",color_choose);
                 i.putExtra("State",0);
                 // 启动
                 startActivityForResult(i,REQUEST_CODE);
             }
         });
+        NavigationView navigationView=findViewById(R.id.nav_view);
+        navigationView.setItemIconTintList(null);
+        navigationView.getMenu().getItem(3).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                final Dialog dia;
+                LayoutInflater lay=LayoutInflater.from(MainActivity.this);
+                View v1=lay.inflate(R.layout.color_layout,null);
+                AlertDialog.Builder bui=new AlertDialog.Builder(MainActivity.this);
+                bui.setView(v1);
+                dia= bui.create();
+                dia.show();
+                final ColorView colorView = v1.findViewById(R.id.color_bar);
+                colorView.setToolbar(toolbar);
+                colorView.setFloatingActionButton(fab);
+                Button button_sure=v1.findViewById(R.id.sure_color);
+                button_sure.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        color_choose = colorView.getCurrentColor();
+                        dia.dismiss();
+                    }
+                });
+                Button button_cancel=v1.findViewById(R.id.cancel_color);
+                button_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        dia.dismiss();
+                    }
+                });
+                //主动收回抽屉
+                drawer.closeDrawers();
+                return false;
+            }
+        });
+
+
+
 
 
 /*        DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -115,8 +170,7 @@ public class MainActivity extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-
-
+        Init();
     }
 
     @Override
@@ -127,12 +181,12 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode) {
                case REQUEST_CODE:
 
-                   time_viewpager.end();
+                   //time_viewpager.end();
                     bundle = data.getExtras();
                     AllData date = (AllData) bundle.getSerializable("aa");
                    Toast.makeText(this, date.getPicture_Str()+"11111111", Toast.LENGTH_SHORT).show();
                     ADD(date);
-                    time_viewpager.start();
+                   //time_viewpager.start();
                     break;
            }
             SelfListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -202,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
             TextView counttime = (TextView) item.findViewById(R.id.picturetextView);
             mainitem self_item = this.getItem(position);
             //设置倒计时
-            time_viewpager.setTextViewshow2(counttime);
+            timeArrayList.get(position).setTextViewshow2(counttime);
 
             img.setImageResource(self_item.getPictureSourse());
             name.setText(self_item.getNametext());
@@ -260,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     //初始化viewpager
-    private void Init(AllData date){
+    private void Init(){
         pager_arraylist.clear();
         int i =0;
 
@@ -303,8 +357,8 @@ public class MainActivity extends AppCompatActivity {
 */
 
 
-                time_viewpager.init(theDatas.get(i).getDate());
-                time_viewpager.setTextViewshow1(countdown);
+                timeArrayList.get(i).init(theDatas.get(i).getDate());
+                timeArrayList.get(i).setTextViewshow1(countdown);
                 //time_viewpager.start();
                 item.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -377,7 +431,8 @@ public class MainActivity extends AppCompatActivity {
 
         selfItem.remove(delete);
         theDatas.remove(delete);
-        Init(date);
+        timeArrayList.remove(delete);
+        Init();
         self_pagerAdapter = new MainActivity.viewpagerAdapter(pager_arraylist);
         Selfviewpager = findViewById(R.id.mainviewPager);
         Selfviewpager.setAdapter(self_pagerAdapter);
@@ -389,7 +444,9 @@ public class MainActivity extends AppCompatActivity {
     //增加函数
     public  void ADD (AllData date){
         theDatas.add(date);
-
+        Time time=new Time();
+        time.init(date.getDate());
+        timeArrayList.add(time);
         Context cet = getBaseContext();
        PictureResource = getResources().getIdentifier(date.getPicture_Str(),"drawable",cet.getPackageName());//字符换图片
 
@@ -427,15 +484,49 @@ public class MainActivity extends AppCompatActivity {
         downTimer.start();
 
  */
-
+        time.start();
 
         selfSpq.notifyDataSetChanged();
 
-        Init(date);
+        Init();
         self_pagerAdapter = new MainActivity.viewpagerAdapter(pager_arraylist);
         Selfviewpager = findViewById(R.id.mainviewPager);
         Selfviewpager.setAdapter(self_pagerAdapter);
         self_pagerAdapter.notifyDataSetChanged();
 
+    }
+
+/*
+//保存数据
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveData.saveAllDate();
+        //saveData.saveTime();
+    }
+    //保存数据
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //saveData.saveTime();
+        saveData.saveAllDate();
+    }
+
+ */
+
+    //打开app后获取之前的数据
+    private void InitData() {
+        saveData=new SaveData(this);
+        theDatas=saveData.loadAllData();
+        int b = 0;
+        while(b < theDatas.size()){
+            Context cet = getBaseContext();
+            PictureResource = getResources().getIdentifier(theDatas.get(b).getPicture_Str(),"drawable",cet.getPackageName());//字符换图片
+            selfItem.add(new mainitem(PictureResource," ",theDatas.get(b).getTitleStr(),theDatas.get(b).getTimeStr(),theDatas.get(b).getTipStr()));
+            timeArrayList.add(new Time());
+            b++;
+            //selfItem.add(new mainitem(PictureResource, countdownTip+formatTime(transformTime(date.getDate())),date.getTitleStr(),date.getTimeStr(),date.getTipStr()));
+        }
+        //timeArrayList= saveData.loadTime();
     }
 }

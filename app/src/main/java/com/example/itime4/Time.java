@@ -89,7 +89,9 @@ public class Time {
     };
 
 
-    public Time(){}
+    public Time(){
+        myTimer = new Timer();
+    }
 
     public  void  start(){
         TimerTask timerTask = new TimerTask() {
@@ -163,8 +165,6 @@ public class Time {
         minter=(result/60)%60;
         hours=(result/3600)%24;
         day=(result/86400);
-
-        myTimer = new Timer();
     }
 //设置viewpager文本
     public void setTextViewshow1(TextView textViewshow) {
