@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,6 +63,8 @@ public class selection extends AppCompatActivity {
     Date date;
     AllData allData = new AllData();
     spq selfSpq;
+    long number_before,number_after;
+    Calendar calendarzdy,calendarlgq;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -231,7 +234,7 @@ public class selection extends AppCompatActivity {
             return item;
         }
     }
-//显示时间选择器
+//显示日期、时间选择器
     public void showDatePickDlg () {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(selection.this, new DatePickerDialog.OnDateSetListener() {
@@ -266,34 +269,38 @@ public class selection extends AppCompatActivity {
         datePickerDialog.show();
 
     }
-
-/*public void showTimePickDlg(){
+//显示时间选择器
+public void showTimePickDlg(final Calendar calendar1){
+    Item item1= selfItem.get(0);
+    item1.setSmalltext(calendar1.get(Calendar.YEAR) + "年" + (calendar1.get(Calendar.MONTH)+1) + "月" + calendar1.get(Calendar.DAY_OF_MONTH)+"日");
     Calendar calendar = Calendar.getInstance();
     TimePickerDialog timePickerDialog = new TimePickerDialog(selection.this, new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker timePicker, int Hours, int Minute) {
+            date = new Date((calendar1.get(Calendar.YEAR)-1900), calendar1.get(Calendar.MONTH),calendar1.get(Calendar.DAY_OF_MONTH),Hours,Minute,0);
             Item item2= selfItem.get(0);
             item2.appendSmalltext("  "+Hours + ":" + Minute);
-            //item2.setBigtext("  "+Hours + ":" + Minute );
             selfSpq.notifyDataSetChanged();
         }
     },calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE),true);
     timePickerDialog.show();
-}*/
+}
 //长按
-public void Long()
-{
-    Dialog dia;
+public void Long() {
+    final Dialog dia;
     LayoutInflater lay=LayoutInflater.from(this);
     View v1=lay.inflate(R.layout.longshow,null);
     AlertDialog.Builder bui=new AlertDialog.Builder(this);
     bui.setView(v1);
     dia= bui.create();
     dia.show();
+
+
+    //设置对话框初始文本
     Calendar cal=Calendar.getInstance();
-    int y=cal.get(Calendar.YEAR);
-    int m=cal.get(Calendar.MONTH);
-    int d=cal.get(Calendar.DAY_OF_MONTH);
+    final int y=cal.get(Calendar.YEAR);
+    final int m=cal.get(Calendar.MONTH)+1;
+    final int d=cal.get(Calendar.DAY_OF_MONTH);
     TextView textbefore=v1.findViewById(R.id.beforetextView);
     textbefore.setText(y+"年"+m+"月"+d+"日");
     TextView textafter=v1.findViewById(R.id.aftertextView);
@@ -305,7 +312,7 @@ public void Long()
 
 //限制输入的位数
     final EditText editbefore=v1.findViewById(R.id.before);
-
+    final TextView textbefore_change=v1.findViewById(R.id.beforetextView);
     editbefore.addTextChangedListener(new TextWatcher() {
         int before=0,after=0;
         @Override
@@ -325,9 +332,31 @@ public void Long()
                 after = Integer.parseInt(editbefore.getText().toString().trim());
             if (after<=0||after>9999)
                 editbefore.setText(""+before);
+
+
+
+            if(editbefore.getText().toString().equals("")){
+                number_before=0;
+            }
+            else{
+                number_before=Integer.parseInt(editbefore.getText().toString());
+
+            }
+            //Date date_b=new Date(y-1900,m,(d-number_before),0,0,0);
+            //textbefore_change.setText(date_b.getYear()+"年"+date_b.getMonth()+"月"+date_b.getDay()+"日");
+            calendarzdy = Calendar.getInstance();
+            long oldTime = calendarzdy.getTimeInMillis();
+            long newTime = oldTime - (number_before*1000*60*60*24);
+            calendarzdy.setTimeInMillis(newTime);
+            textbefore_change.setText(calendarzdy.get(Calendar.YEAR)+"年"+(calendarzdy.get(Calendar.MONTH)+1)+"月"+calendarzdy.get(Calendar.DAY_OF_MONTH)+"日");
         }
+
+
+
+
     });
     final EditText editafter=v1.findViewById(R.id.after);
+    final TextView textafter_change=v1.findViewById(R.id.aftertextView);
     editafter.addTextChangedListener(new TextWatcher() {
         int before=0,after=0;
         @Override
@@ -347,9 +376,49 @@ public void Long()
                 after = Integer.parseInt(editafter.getText().toString().trim());
             if (after<=0||after>9999)
                 editafter.setText(""+before);
+            if(editafter.getText().toString().equals("")){
+                number_after=0;
+            }
+            else{
+                number_after=Integer.parseInt(editafter.getText().toString());
+
+            }
+            //Date date_b=new Date(y-1900,m,(d-number_before),0,0,0);
+            //textbefore_change.setText(date_b.getYear()+"年"+date_b.getMonth()+"月"+date_b.getDay()+"日");
+            calendarlgq = Calendar.getInstance();
+            long oldTime = calendarlgq.getTimeInMillis();
+            long newTime = oldTime + (number_after*1000*60*60*24);
+            calendarlgq.setTimeInMillis(newTime);
+            textafter_change.setText(calendarlgq.get(Calendar.YEAR)+"年"+(calendarlgq.get(Calendar.MONTH)+1)+"月"+calendarlgq.get(Calendar.DAY_OF_MONTH)+"日");
         }
     });
-}
+    //设置选择时间点击事件
+    Button choose_before=v1.findViewById(R.id.choose_before);
+    choose_before.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            showTimePickDlg(calendarzdy);
+            dia.dismiss();
+        }
+    });
+    //设置选择时间点击事件
+    Button choose_after=v1.findViewById(R.id.choose_after);
+    choose_after.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            showTimePickDlg(calendarlgq);
+            dia.dismiss();
+        }
+    });
+    //设置取消按钮
+    Button cancel=v1.findViewById(R.id.cancel);
+    cancel.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -374,5 +443,35 @@ public void Long()
         }
 
 
+    }
+    //将当时时间转换long数据
+    public long transformTime(int number_day){
+        //获取当前系统时间
+        java.util.Date date = new java.util.Date((System.currentTimeMillis()));
+
+        long result = date.getTime()+number_day*24*60*60*1000;
+
+        return result;
+    }
+    //返回格式化的日期和时间
+    public String formatTime(long millisecond) {
+        long day = (long) ((millisecond)/1000/60/60/24);
+        long hour = (long) ((millisecond-(day*24*60*60*1000))/1000/60/60);
+        long minute = (long) ((millisecond-(day*24*60*60*1000)-(hour*60*60*1000))/1000/60);
+        long second = (long) (((millisecond-(day*24*60*60*1000)-(hour*60*60*1000)-(minute*1000*60))/1000)%60);
+
+        if(day==0){
+            if(hour==0){
+                if (minute==0){
+                    return second + "秒";
+                }else {
+                    return minute + "分" + second + "秒";
+                }
+            }else {
+                return hour+"时" + minute + "分" + second + "秒";
+            }
+        }else {
+            return day + "天" + hour + "时" + minute + "分" + second + "秒";
+        }
     }
 }

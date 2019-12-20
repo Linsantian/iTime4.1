@@ -35,9 +35,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="-5dp"
-        android:layout_marginLeft="-5dp"
-        android:layout_marginTop="248dp"
+        android:layout_marginStart="-8dp"
+        android:layout_marginLeft="-8dp"
+        android:layout_marginTop="297dp"
         android:background="#FF4081" />
 
     <TextView
@@ -49,7 +49,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="103dp"
         android:layout_marginLeft="103dp"
-        android:layout_marginTop="261dp"
+        android:layout_marginTop="260dp"
         android:text="天之后：" />
 
     <EditText
@@ -61,7 +61,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="183dp"
+        android:layout_marginTop="178dp"
         android:ems="10"
         android:inputType="number" />
 
@@ -74,14 +74,14 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="7dp"
         android:layout_marginLeft="7dp"
-        android:layout_marginTop="251dp"
+        android:layout_marginTop="246dp"
         android:ems="10"
         android:inputType="number" />
 
     <TextView
         android:id="@+id/beforetextView"
-        android:layout_width="205dp"
-        android:layout_height="39dp"
+        android:layout_width="185dp"
+        android:layout_height="35dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -92,14 +92,14 @@
 
     <TextView
         android:id="@+id/aftertextView"
-        android:layout_width="207dp"
-        android:layout_height="36dp"
+        android:layout_width="183dp"
+        android:layout_height="34dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="164dp"
-        android:layout_marginLeft="164dp"
-        android:layout_marginTop="258dp"
+        android:layout_marginStart="162dp"
+        android:layout_marginLeft="162dp"
+        android:layout_marginTop="257dp"
         android:text="TextView" />
 
     <TextView
@@ -117,7 +117,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="108dp"
-        android:background="#0033ff"></RelativeLayout>
+        android:background="#0033ff">
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/today"
@@ -130,6 +132,30 @@
         android:layout_marginLeft="94dp"
         android:layout_marginTop="127dp"
         android:text="今天是：" />
+
+    <Button
+        android:id="@+id/choose_before"
+        android:layout_width="56dp"
+        android:layout_height="37dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="187dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:text="选取" />
+
+    <Button
+        android:id="@+id/choose_after"
+        android:layout_width="56dp"
+        android:layout_height="37dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="255dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
+        android:text="选取" />
 
 
 </RelativeLayout>

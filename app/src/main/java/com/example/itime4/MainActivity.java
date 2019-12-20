@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<mainitem> selfItem = new ArrayList<>();
     private viewpagerAdapter self_pagerAdapter = new viewpagerAdapter(pager_arraylist);
     ArrayList<AllData> theDatas = new ArrayList<>();
-    AllData date;
     Bundle bundle;
     CountDownTimer downTimer,downTimer2;
     private ListView SelfListView;
@@ -57,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     String countdownTip="还有";
     MainActivity.mainAdapter selfSpq;
     int PictureResource=0;
+    private  ArrayList<Time> timeArrayList=new ArrayList<>();
+    Time time_viewpager=new Time();
 
 
 
@@ -125,66 +126,13 @@ public class MainActivity extends AppCompatActivity {
 
             switch (requestCode) {
                case REQUEST_CODE:
-                   // gettitleStr = data.getStringExtra("标题名字");
-                   // String gettipStr = data.getStringExtra("备注");
-                    //getDateStr = data.getStringExtra("时间");
-                    //getPictureStr = data.getStringExtra("图片");
-                    //date = data.getStringArrayExtra("选取的时间");
-                    //date = (AllData)data.getSerializableExtra("aa");
+
+                   time_viewpager.end();
                     bundle = data.getExtras();
-                    date = (AllData) bundle.getSerializable("aa");
+                    AllData date = (AllData) bundle.getSerializable("aa");
                    Toast.makeText(this, date.getPicture_Str()+"11111111", Toast.LENGTH_SHORT).show();
                     ADD(date);
-                    /*
-                    Context cet = getBaseContext();
-                    PictureResource = getResources().getIdentifier(date.getPicture_Str(),"drawable",cet.getPackageName());//字符换图片
-
-
-                    //Toast.makeText(this, "  成功了吗？   "+gettitleStr, Toast.LENGTH_SHORT).show();
-                    selfItem.add(new mainitem(PictureResource, countdownTip+formatTime(transformTime(date.getDate())),date.getTitleStr(),date.getTimeStr(),date.getTipStr()));
-                    //selfSpq = new MainActivity.mainAdapter(this,R.layout.mainlayout,selfItem);
-                    //SelfListView = findViewById(R.id.mainlistview);
-                    //SelfListView.setAdapter(selfSpq);
-
-                   final mainitem new1 = selfItem.get(selfItem.size()-1);
-
-
-                    downTimer = new CountDownTimer(transformTime(date.getDate()),1000) {
-
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-
-                            //TextView countdown_main = findViewById(R.id.picturetextView);
-                            //countdown_main.setText(countdownTip+formatTime(millisUntilFinished));
-                            new1.setPicturetext("还有"+formatTime(millisUntilFinished));
-                           selfSpq.notifyDataSetChanged();
-                        }
-
-                        //倒计时结束后的操作
-                        @Override
-                        public void onFinish() {
-                            TextView countdown_main = findViewById(R.id.picturetextView);
-                           countdown_main.setText("");
-
-                        }
-
-
-                    };
-                    downTimer.start();
-
-
-                    selfSpq.notifyDataSetChanged();
-
-                    Init();
-                    self_pagerAdapter = new MainActivity.viewpagerAdapter(pager_arraylist);
-                    Selfviewpager = findViewById(R.id.mainviewPager);
-                    Selfviewpager.setAdapter(self_pagerAdapter);
-                    self_pagerAdapter.notifyDataSetChanged();
-
-                     */
-
-
-
+                    time_viewpager.start();
                     break;
            }
             SelfListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -196,8 +144,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
         if(resultCode == RESULT_CANCELED){
-
-            DELETE(data.getIntExtra("deleteposition",-1));
+            int position=data.getIntExtra("position",-1);
+            Bundle bundle2;
+            bundle2=data.getExtras();
+            AllData date=(AllData)bundle2.getSerializable("ee");
+            DELETE(date,data.getIntExtra("deleteposition",-1));
         }
         if(resultCode == RESULT_FIRST_USER){
             int position=data.getIntExtra("position",-1);
@@ -206,10 +157,12 @@ public class MainActivity extends AppCompatActivity {
             AllData date3=(AllData)bundle2.getSerializable("dd");
             Toast.makeText(this, date3.getTitleStr()+"5555555", Toast.LENGTH_SHORT).show();
 
-            DELETE(position);
+            DELETE(date3,position);
             ADD(date3);
+
             selfSpq.notifyDataSetChanged();
             self_pagerAdapter.notifyDataSetChanged();
+
         }
     }
 
@@ -248,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
             TextView time = (TextView) item.findViewById(R.id.timetextView);
             TextView counttime = (TextView) item.findViewById(R.id.picturetextView);
             mainitem self_item = this.getItem(position);
+            //设置倒计时
+            time_viewpager.setTextViewshow2(counttime);
 
             img.setImageResource(self_item.getPictureSourse());
             name.setText(self_item.getNametext());
@@ -305,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     //初始化viewpager
-    private void Init(){
+    private void Init(AllData date){
         pager_arraylist.clear();
         int i =0;
 
@@ -322,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
             name.setText(selfItem.get(i).getNametext());
             time.setText(selfItem.get(i).getTimetext());
             //countdown.setText(selfItem.get(i).getPicturetext());
-            downTimer2 = new CountDownTimer(transformTime(date.getDate()),1000) {
+ /*           downTimer2 = new CountDownTimer(transformTime(date.getDate()),1000) {
 
                 @Override
                 public void onTick(long millisUntilFinished) {
@@ -345,7 +300,13 @@ public class MainActivity extends AppCompatActivity {
 
             };
             downTimer2.start();
-            item.setOnClickListener(new View.OnClickListener() {
+*/
+
+
+                time_viewpager.init(theDatas.get(i).getDate());
+                time_viewpager.setTextViewshow1(countdown);
+                //time_viewpager.start();
+                item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onCreatDetail(pager_arraylist.indexOf(view));
@@ -412,11 +373,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
     //删除函数
-    public void DELETE(int delete){
+    public void DELETE(AllData date,int delete){
 
         selfItem.remove(delete);
         theDatas.remove(delete);
-        Init();
+        Init(date);
         self_pagerAdapter = new MainActivity.viewpagerAdapter(pager_arraylist);
         Selfviewpager = findViewById(R.id.mainviewPager);
         Selfviewpager.setAdapter(self_pagerAdapter);
@@ -428,6 +389,7 @@ public class MainActivity extends AppCompatActivity {
     //增加函数
     public  void ADD (AllData date){
         theDatas.add(date);
+
         Context cet = getBaseContext();
        PictureResource = getResources().getIdentifier(date.getPicture_Str(),"drawable",cet.getPackageName());//字符换图片
 
@@ -437,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
         //selfSpq = new MainActivity.mainAdapter(this,R.layout.mainlayout,selfItem);
         //SelfListView = findViewById(R.id.mainlistview);
         //SelfListView.setAdapter(selfSpq);
-
+/*
         final mainitem new1 = selfItem.get(selfItem.size()-1);
 
 
@@ -464,10 +426,12 @@ public class MainActivity extends AppCompatActivity {
         };
         downTimer.start();
 
+ */
+
 
         selfSpq.notifyDataSetChanged();
 
-        Init();
+        Init(date);
         self_pagerAdapter = new MainActivity.viewpagerAdapter(pager_arraylist);
         Selfviewpager = findViewById(R.id.mainviewPager);
         Selfviewpager.setAdapter(self_pagerAdapter);

@@ -23,7 +23,9 @@ public class detailActivity extends AppCompatActivity {
     int  PictureResource,position;
     Bundle bundle;
     AllData date,date2;
-    CountDownTimer downTimer;
+   CountDownTimer downTimer1,downTimer2;
+   Time time1=new Time();
+   Time time2=new Time();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class detailActivity extends AppCompatActivity {
        position=data.getIntExtra("position",-1);
         bundle = data.getExtras();
         date = (AllData) bundle.getSerializable("bb");
+        date2=date;
         Toast.makeText(this, date.getPicture_Str()+"222222222", Toast.LENGTH_SHORT).show();
         TextView title_detail=findViewById(R.id.title_detail);
         title_detail.setText(date.getTitleStr());
@@ -54,7 +57,11 @@ public class detailActivity extends AppCompatActivity {
         ImageView picture_detail=findViewById(R.id.picture_detail);
         picture_detail.setImageResource(PictureResource);
         final TextView countdown_detail = findViewById(R.id.countdown_detail);
-        downTimer = new CountDownTimer(transformTime(date.getDate()),1000) {
+        time1.init(date.getDate());
+        time1.setTextViewshow1(countdown_detail);
+        time1.start();
+        /*
+        downTimer1 = new CountDownTimer(transformTime(date.getDate()),1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -72,7 +79,9 @@ public class detailActivity extends AppCompatActivity {
 
 
         };
-        downTimer.start();
+        downTimer1.start();
+
+         */
         //  break;
         //   }
         // }
@@ -99,6 +108,8 @@ public class detailActivity extends AppCompatActivity {
                 // 在存放资源代码的文件夹下下，
                 Intent i = new Intent();
                 i.putExtra("deleteposition",position);
+                Bundle bundle2=new Bundle();
+                bundle2.putSerializable("ee",(Serializable) date);
                setResult(RESULT_CANCELED,i);
                finish();
             }
@@ -130,14 +141,42 @@ public class detailActivity extends AppCompatActivity {
         if(resultCode==RESULT_OK){
             Bundle bundle=data.getExtras();
             date2=(AllData)bundle.getSerializable("aa");
+
             TextView title=findViewById(R.id.title_detail);
             title.setText(date2.getTitleStr());
             TextView time=findViewById(R.id.time_detail);
             time.setText(date2.getTimeStr());
             Toast.makeText(this, date2.getPicture_Str()+"444444444", Toast.LENGTH_SHORT).show();
+           // downTimer1.cancel();
+            time1.end();
+            final TextView countdown_detail = findViewById(R.id.countdown_detail);
+            time2.init(date2.getDate());
+            time2.setTextViewshow1(countdown_detail);
+            time2.start();
+            /*
+            downTimer2 = new CountDownTimer(transformTime(date2.getDate()),1000) {
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+
+                    countdown_detail.setText("还有"+formatTime(millisUntilFinished));
+                }
+
+                //倒计时结束后的操作
+                @Override
+                public void onFinish() {
+                    countdown_detail.setText("");
+
+                }
+
+
+            };
+            downTimer2.start();
+
+             */
         }
         if(resultCode==-2){
-            Bundle bundle=data.getExtras();
             date2=date;
         }
     }
