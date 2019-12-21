@@ -344,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
             name.setText(theDatas.get(i).getTitleStr());
             time.setText(theDatas.get(i).getTimeStr());
                 timeArrayList.get(i).init(theDatas.get(i).getDate());
+                timeArrayList.get(i).setRepetitionDay(theDatas.get(i).getRepetitionDay());
                 timeArrayList.get(i).setTextViewshow1(countdown);
                 //time_viewpager.start();
                 item.setOnClickListener(new View.OnClickListener() {
@@ -421,7 +422,6 @@ public class MainActivity extends AppCompatActivity {
         Selfviewpager = findViewById(R.id.mainviewPager);
         Selfviewpager.setAdapter(self_pagerAdapter);
         self_pagerAdapter.notifyDataSetChanged();
-        Toast.makeText(MainActivity.this,pager_arraylist.size()+"    bilibalabilibala",Toast.LENGTH_SHORT).show();
         self_pagerAdapter.notifyDataSetChanged();
         selfSpq.notifyDataSetChanged();
     }
@@ -430,41 +430,12 @@ public class MainActivity extends AppCompatActivity {
         theDatas.add(date);
         Time time=new Time();
         time.init(date.getDate());
+        time.setRepetitionDay(date.getRepetitionDay());
         timeArrayList.add(time);
         Context cet = getBaseContext();
         int PictureResource1 = getResources().getIdentifier(date.getPicture_Str(),"drawable",cet.getPackageName());//字符换图片
         selfItem.add(new mainitem(PictureResource1, formatTime(transformTime(date.getDate())),date.getTitleStr(),date.getTimeStr(),date.getTipStr()));
-        //selfSpq = new MainActivity.mainAdapter(this,R.layout.mainlayout,selfItem);
-        //SelfListView = findViewById(R.id.mainlistview);
-        //SelfListView.setAdapter(selfSpq);
-/*
-        final mainitem new1 = selfItem.get(selfItem.size()-1);
 
-
-        downTimer = new CountDownTimer(transformTime(date.getDate()),1000) {
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-                //TextView countdown_main = findViewById(R.id.picturetextView);
-                //countdown_main.setText(countdownTip+formatTime(millisUntilFinished));
-                new1.setPicturetext("还有"+formatTime(millisUntilFinished));
-                selfSpq.notifyDataSetChanged();
-            }
-
-            //倒计时结束后的操作
-            @Override
-            public void onFinish() {
-                TextView countdown_main = findViewById(R.id.picturetextView);
-                countdown_main.setText("");
-
-            }
-
-
-        };
-        downTimer.start();
-
- */
         time.start();
         selfSpq.notifyDataSetChanged();
         Init();
@@ -501,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
             i++;
         }
     }
-
+//将所有倒计时打开
     private void Start(){
         int i = 0;
         while(i<timeArrayList.size()){

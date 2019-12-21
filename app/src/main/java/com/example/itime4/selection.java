@@ -69,6 +69,7 @@ public class selection extends AppCompatActivity {
     repetitionAdapter selfreprtitionAdapter;
     long number_before,number_after;
     Calendar calendarzdy,calendarlgq;
+    long repetitionDay=0;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -196,10 +197,9 @@ public class selection extends AppCompatActivity {
 
 
                 Intent i = new Intent();
-
+                allData.setRepetitionDay(repetitionDay);
                 allData.setTitleStr(titleStr);
                 allData.setTipStr(tipStr);
-
                 allData.setPicture_Str(picture_code);
                 if(date==null) {
                     Calendar cal = Calendar.getInstance();
@@ -217,8 +217,6 @@ public class selection extends AppCompatActivity {
             }
         });
     }
-
-
 
     private class spq extends ArrayAdapter<Item> {
         private  int resourceId;
@@ -494,6 +492,87 @@ public void Long() {
         selfreprtitionAdapter = new repetitionAdapter(this,R.layout.repetition_layout_listview,repetitionItemArrayList);
         Repetition_listview = v1.findViewById(R.id.repetition_listview);
         Repetition_listview.setAdapter(selfreprtitionAdapter);
+        Repetition_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long ID) {
+                Item item1= selfItem.get(1);
+                switch (position){
+                    case 0:
+                        item1.setSmalltext("每年");
+                       repetitionDay=365;
+
+                        break;
+                    case 1:
+                        item1.setSmalltext("每月");
+                        repetitionDay=30;
+                        break;
+                    case 2:
+                        item1.setSmalltext("每周");
+                        repetitionDay=7;
+                        break;
+                    case 3:
+                        dia.dismiss();
+                        final Dialog dia1;
+                        LayoutInflater lay=LayoutInflater.from(selection.this);
+                        View v2=lay.inflate(R.layout.custom_layout,null);
+                        AlertDialog.Builder bui=new AlertDialog.Builder(selection.this);
+                        bui.setView(v2);
+                        dia1= bui.create();
+                        dia1.show();
+
+                        //限制输入的位数
+                        final EditText custom_editText=v2.findViewById(R.id.custom_editText);
+                        custom_editText.addTextChangedListener(new TextWatcher() {
+                            int before=0,after=0;
+                            @Override
+                            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                if(!custom_editText.getText().toString().trim().isEmpty())
+                                    before = Integer.parseInt(custom_editText.getText().toString().trim());
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable editable) {
+                                if(!custom_editText.getText().toString().trim().isEmpty())
+                                    after = Integer.parseInt(custom_editText.getText().toString().trim());
+                                if (after<=0||after>9999)
+                                    custom_editText.setText(""+before);
+
+                                if(custom_editText.getText().toString().equals("")){
+                                    repetitionDay=0;
+                                }
+                                else{
+                                    repetitionDay=Long.parseLong(custom_editText.getText().toString());
+                                    selfSpq.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                        //设置确定按钮
+                        Button choose_sure=v2.findViewById(R.id.sure_button_custom);
+                        choose_sure.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Item item2= selfItem.get(1);
+                                item2.setSmalltext(repetitionDay+"天");
+                                dia1.dismiss();
+                                selfSpq.notifyDataSetChanged();
+                            }
+                        });
+                        item1.setSmalltext(repetitionDay+"天");
+                        break;
+                    case 4:
+                        item1.setSmalltext("无");
+                        repetitionDay=0;
+                        break;
+                }
+                selfSpq.notifyDataSetChanged();
+                dia.dismiss();
+            }
+        });
 
 
     }

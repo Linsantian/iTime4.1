@@ -11,6 +11,7 @@ public class AllData implements Serializable {
     String tipStr;
     String timeStr;
     String picture_Str;
+    long repetitionDay;
     Date date;
 
     public AllData(ImageView imageView, String titleStr, String tipStr, String timeStr, String picture_Str, Date date) {
@@ -71,5 +72,13 @@ public class AllData implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public long getRepetitionDay() {
+        return repetitionDay;
+    }
+
+    public void setRepetitionDay(long repetitionDay) {
+        this.repetitionDay = repetitionDay;
     }
 }

@@ -11,79 +11,76 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Time {
+    private long repetitionDay = 0;
     private  long day;
     private  long hours;
     private  long minter;
     private  long second;
     private Timer myTimer;
-    private Date date = new Date((System.currentTimeMillis()));
+    private Date date = new Date((System.currentTimeMillis())),date2;
     private boolean state;
     TextView textViewshow1,textViewshow2;
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            if(msg.what == 1){
+            if(msg.what == 1) {
                 computeTime();
-                if (second==0&&minter==0&&hours==0&&day==0){
-                    state=false;
-                }
+                    if (repetitionDay==0&second == 0 && minter == 0 && hours == 0 && day == 0) {
+                        state = false;
+                    }
+                    else if (repetitionDay!=0&&second == 0 && minter == 0 && hours == 0 && day == 0) {
+                        date2.setTime(date2.getTime()+(repetitionDay*1000*60*60*24));
+                        init(date2);
+                        state = true;
+                    }
+                    if (state == false) {
+                        if (day == 0 && hours == 0 && minter == 0) {
 
-                if(state == false) {
-                    if (day==0&&hours==0&&minter==0) {
+                            textViewshow1.setText("已经" + second + "秒");
+                            if (textViewshow2 != null) {
+                                textViewshow2.setText("已经" + '\n' + second + "秒");
+                            }
+                        } else if (day == 0 && hours == 0) {
+                            textViewshow1.setText("已经" + minter + "分钟" + second + "秒");
+                            if (textViewshow2 != null) {
+                                textViewshow2.setText("已经" + '\n' + minter + "分钟");
+                            }
+                        } else if (day == 0) {
+                            textViewshow1.setText("已经" + hours + "小时" + minter + "分钟" + second + "秒");
+                            if (textViewshow2 != null) {
+                                textViewshow2.setText("已经" + '\n' + hours + "小时");
+                            }
+                        } else {
+                            textViewshow1.setText("已经" + day + "天" + hours + "小时" + minter + "分钟" + second + "秒");
+                            if (textViewshow2 != null) {
+                                textViewshow2.setText("已经" + '\n' + day + "天");
+                            }
+                        }
+                    } else if (state == true) {
+                        if (day == 0 && hours == 0 && minter == 0) {
+                            textViewshow1.setText("只剩" + second + "秒");
+                            if (textViewshow2 != null) {
+                                textViewshow2.setText("只剩" + '\n' + second + "秒");
+                            }
+                        } else if (day == 0 && hours == 0) {
+                            textViewshow1.setText("只剩" + minter + "分钟" + second + "秒");
+                            if (textViewshow2 != null) {
+                                textViewshow2.setText("只剩" + '\n' + minter + "分钟");
+                            }
+                        } else if (day == 0) {
+                            textViewshow1.setText("只剩" + hours + "小时" + minter + "分钟" + second + "秒");
+                            if (textViewshow2 != null) {
+                                textViewshow2.setText("只剩" + '\n' + hours + "小时");
+                            }
+                        } else {
+                            textViewshow1.setText("只剩" + day + "天" + hours + "小时" + minter + "分钟" + second + "秒");
+                            if (textViewshow2 != null) {
+                                textViewshow2.setText("只剩" + '\n' + day + "天");
+                            }
+                        }
 
-                            textViewshow1.setText("已经"+second+"秒");
-                        if(textViewshow2!=null){
-                        textViewshow2.setText("已经" + '\n' + second + "秒");
-                        }
                     }
-                    else if(day==0&&hours==0) {
-                        textViewshow1.setText("已经"+minter+"分钟"+second+"秒");
-                        if(textViewshow2!=null) {
-                            textViewshow2.setText("已经" + '\n' + minter + "分钟");
-                        }
-                    }
-                    else if(day==0) {
-                        textViewshow1.setText("已经"+hours+"小时"+minter+"分钟"+second+"秒");
-                        if(textViewshow2!=null) {
-                            textViewshow2.setText("已经" + '\n' + hours + "小时");
-                        }
-                    }
-                    else {
-                        textViewshow1.setText("已经"+day+"天"+hours+"小时"+minter+"分钟"+second+"秒");
-                        if(textViewshow2!=null) {
-                            textViewshow2.setText("已经" + '\n' + day + "天");
-                        }
-                    }
-                }
-                else if(state==true){
-                    if (day==0&&hours==0&&minter==0) {
-                        textViewshow1.setText("只剩"+second+"秒");
-                        if(textViewshow2!=null) {
-                            textViewshow2.setText("只剩" + '\n' + second + "秒");
-                        }
-                    }
-                    else if(day==0&&hours==0){
-                        textViewshow1.setText("只剩"+minter+"分钟"+second+"秒");
-                        if(textViewshow2!=null) {
-                            textViewshow2.setText("只剩" + '\n' + minter + "分钟");
-                        }
-                    }
-                    else if(day==0){
-                        textViewshow1.setText("只剩"+hours+"小时"+minter+"分钟"+second+"秒");
-                        if(textViewshow2!=null) {
-                            textViewshow2.setText("只剩" + '\n' + hours + "小时");
-                        }
-                    }
-                    else {
-                        textViewshow1.setText("只剩"+day+"天"+hours+"小时"+minter+"分钟"+second+"秒");
-                        if(textViewshow2!=null) {
-                            textViewshow2.setText("只剩" + '\n' + day + "天");
-                        }
-                    }
-
-                }
-
             }
         }
     };
@@ -109,7 +106,12 @@ public class Time {
         if(myTimer!=null)
             myTimer.cancel();
     }
-//计算
+
+    public void setRepetitionDay(long repetitionDay) {
+        this.repetitionDay = repetitionDay;
+    }
+
+    //计算
     private  void computeTime(){
         if (state==true){
             second--;
@@ -150,14 +152,30 @@ public class Time {
     }
 //初始
     public void init(Date date1){
+        this.date2=date1;
+
         long result;
-        if(date1.getTime()>date.getTime()) {
-            result = date1.getTime() - date.getTime();
-            state=true;
+        if(repetitionDay==0) {
+            if (date1.getTime() > date.getTime()) {
+                result = date1.getTime() - date.getTime();
+                state = true;//倒计时
+            }
+            else {
+                result = date.getTime() - date1.getTime();
+                state = false;//正计时
+            }
         }
         else {
-            result = date.getTime() - date1.getTime();
-            state=false;
+            state=true;
+
+            while (date1.getTime()< date.getTime()){
+
+
+                long lgq = date1.getTime()+(repetitionDay*1000*60*60*24);
+                date1.setTime(lgq);
+            }
+            result=date1.getTime()-date.getTime();
+            //result=date1.getTime()-date.getTime();
         }
         result/=1000;
 

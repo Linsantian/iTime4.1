@@ -33,10 +33,7 @@ public class detailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // if(resultCode == RESULT_OK) {
-        //Toast.makeText(detailActivity.this, "你是超级大傻瓜", Toast.LENGTH_SHORT).show();
-        // switch (requestCode) {
-        // case REQUEST_CODE:
+
         Intent data=getIntent();
         color_choose=data.getIntExtra("color", -1);
         if(data.getIntExtra("color", -1)!=0) {
@@ -65,30 +62,10 @@ public class detailActivity extends AppCompatActivity {
         picture_detail.setImageResource(PictureResource);
         final TextView countdown_detail = findViewById(R.id.countdown_detail);
         time1.init(date.getDate());
+        time1.setRepetitionDay(date.getRepetitionDay());
         time1.setTextViewshow1(countdown_detail);
         time1.start();
-        /*
-        downTimer1 = new CountDownTimer(transformTime(date.getDate()),1000) {
 
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-
-                countdown_detail.setText("还有"+formatTime(millisUntilFinished));
-            }
-
-            //倒计时结束后的操作
-            @Override
-            public void onFinish() {
-                 countdown_detail.setText("");
-
-            }
-
-
-        };
-        downTimer1.start();
-
-         */
 
         //设置返回的点击事件
         FloatingActionButton back=findViewById(R.id.backBut_detail);
@@ -139,7 +116,7 @@ public class detailActivity extends AppCompatActivity {
         });
 
     }
-    //将时间转换long数据
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -157,36 +134,15 @@ public class detailActivity extends AppCompatActivity {
             time1.end();
             final TextView countdown_detail = findViewById(R.id.countdown_detail);
             time2.init(date2.getDate());
+            time2.setRepetitionDay(date2.getRepetitionDay());
             time2.setTextViewshow1(countdown_detail);
             time2.start();
-            /*
-            downTimer2 = new CountDownTimer(transformTime(date2.getDate()),1000) {
 
-                @Override
-                public void onTick(long millisUntilFinished) {
-
-
-                    countdown_detail.setText("还有"+formatTime(millisUntilFinished));
-                }
-
-                //倒计时结束后的操作
-                @Override
-                public void onFinish() {
-                    countdown_detail.setText("");
-
-                }
-
-
-            };
-            downTimer2.start();
-
-             */
         }
         if(resultCode==-2){
             date2=date;
         }
     }
-
 
     }
 
