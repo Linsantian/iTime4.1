@@ -82,9 +82,7 @@ public class detailActivity extends AppCompatActivity {
         downTimer1.start();
 
          */
-        //  break;
-        //   }
-        // }
+
         //设置返回的点击事件
         FloatingActionButton back=findViewById(R.id.backBut_detail);
         back.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +144,7 @@ public class detailActivity extends AppCompatActivity {
             title.setText(date2.getTitleStr());
             TextView time=findViewById(R.id.time_detail);
             time.setText(date2.getTimeStr());
-            Toast.makeText(this, date2.getPicture_Str()+"444444444", Toast.LENGTH_SHORT).show();
+
            // downTimer1.cancel();
             time1.end();
             final TextView countdown_detail = findViewById(R.id.countdown_detail);

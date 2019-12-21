@@ -51,18 +51,21 @@ import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class selection extends AppCompatActivity {
 
     private FloatingActionButton backButton;
     private ArrayList<Item> selfItem;
-    private ListView SelfListView;
-    private String Date_ymd;
+    private ArrayList<repetitionItem> repetitionItemArrayList;
+    private ListView SelfListView,Repetition_listview;
+    private String Date_ymd,picture_code;
     Bitmap bitmap;
     Date date;
     AllData allData = new AllData();
     spq selfSpq;
+    repetitionAdapter selfreprtitionAdapter;
     long number_before,number_after;
     Calendar calendarzdy,calendarlgq;
 
@@ -82,6 +85,14 @@ public class selection extends AppCompatActivity {
         selfSpq = new spq(this,R.layout.layout,selfItem);
         SelfListView = findViewById(R.id.listview);
         SelfListView.setAdapter(selfSpq);
+        //产生随机数
+        Random random = new Random();
+        int a_after_number=random.nextInt(10)+1;
+        picture_code = "a"+a_after_number;
+        Context cet = getBaseContext();
+        int PictureResource = getResources().getIdentifier(picture_code,"drawable",cet.getPackageName());//字符换图片
+        ImageView imageView1 = findViewById(R.id.layout_background);
+        imageView1.setImageResource(PictureResource);
 
 
         Intent data=getIntent();
@@ -97,7 +108,6 @@ public class selection extends AppCompatActivity {
                 title.setText(date1.getTitleStr());
                 EditText tip=findViewById(R.id.tipname);
                 tip.setText(date1.getTipStr());
-                Toast.makeText(selection.this,date1.getPicture_Str()+"333333333",Toast.LENGTH_SHORT).show();
                 selfItem.get(0).setSmalltext(date1.getTimeStr());
                 selfSpq.notifyDataSetChanged();
             }
@@ -114,16 +124,10 @@ public class selection extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long ID) {
                 switch (position){
                     case 0:
-/*
-
-                        //Toast.makeText(selection.this, "你是傻瓜", Toast.LENGTH_SHORT).show();
-*/
-
-                       // showTimePickDlg();
                         showDatePickDlg();
                         break;
                     case 1:
-                        Toast.makeText(selection.this, "你是大傻瓜", Toast.LENGTH_SHORT).show();
+                        Repetition();
                         break;
                     case 2:
                         Intent intent = new Intent();
@@ -134,10 +138,9 @@ public class selection extends AppCompatActivity {
 
                         startActivityForResult(intent,1);
 
-                       Toast.makeText(selection.this, "item2被点击", Toast.LENGTH_SHORT).show();
                         break;
                     case 3:
-                        Toast.makeText(selection.this, "你是超级大大傻瓜", Toast.LENGTH_SHORT).show();
+                        Label();
                         break;
                 }
             }
@@ -181,10 +184,8 @@ public class selection extends AppCompatActivity {
 
                 TextView textview = (TextView)findViewById(R.id.datatip);
                 Date_ymd=(String)textview.getText();
-                //产生随机数
-                Random random = new Random();
-                int a_after_number=random.nextInt(10)+1;
-                String picture_code = "a"+a_after_number;
+
+
                 Intent i = new Intent();
 
                 allData.setTitleStr(titleStr);
@@ -202,12 +203,6 @@ public class selection extends AppCompatActivity {
                 bundle.putSerializable("aa",(Serializable) allData);
 
                 i.putExtras(bundle);
-                //i.putExtra("标题名字",titleStr);
-               //i.putExtra("备注",tipStr);
-              // i.putExtra("时间",Date_ymd);
-               //i.putExtra("图片",picture_code);
-               //i.putExtra("选取的时间",date);
-                //startActivity(i);
                 setResult(RESULT_OK,i);
                 finish();
             }
@@ -224,7 +219,6 @@ public class selection extends AppCompatActivity {
             resourceId=resource;
         }
 
-
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -240,6 +234,30 @@ public class selection extends AppCompatActivity {
             img.setImageResource(self_item.getPictureSource());
             name.setText(self_item.getBigtext());
             price.setText(self_item.getSmalltext());
+
+            return item;
+        }
+    }
+    private class repetitionAdapter extends ArrayAdapter<repetitionItem> {
+        private  int resourceId;
+
+        public repetitionAdapter(@NonNull Context context, int resource, @NonNull List<repetitionItem> objects) {
+            super(context, resource, objects);
+            resourceId=resource;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            LayoutInflater mInflater= LayoutInflater.from(this.getContext());
+            View item = mInflater.inflate(this.resourceId,null);
+
+
+            TextView price = (TextView)item.findViewById(R.id.repetition_textview);
+
+            repetitionItem self_item= this.getItem(position);
+
+            price.setText(self_item.getString());
 
             return item;
         }
@@ -266,7 +284,6 @@ public class selection extends AppCompatActivity {
                         date = new Date((year-1900), monthOfYear,dayOfMonth,Hours,Minute,0);
                         Item item2= selfItem.get(0);
                         item2.appendSmalltext("  "+Hours + ":" + Minute);
-                        //item2.setBigtext("  "+Hours + ":" + Minute );
                         selfSpq.notifyDataSetChanged();
 
                     }
@@ -352,8 +369,7 @@ public void Long() {
                 number_before=Integer.parseInt(editbefore.getText().toString());
 
             }
-            //Date date_b=new Date(y-1900,m,(d-number_before),0,0,0);
-            //textbefore_change.setText(date_b.getYear()+"年"+date_b.getMonth()+"月"+date_b.getDay()+"日");
+
             calendarzdy = Calendar.getInstance();
             long oldTime = calendarzdy.getTimeInMillis();
             long newTime = oldTime - (number_before*1000*60*60*24);
@@ -393,8 +409,7 @@ public void Long() {
                 number_after=Integer.parseInt(editafter.getText().toString());
 
             }
-            //Date date_b=new Date(y-1900,m,(d-number_before),0,0,0);
-            //textbefore_change.setText(date_b.getYear()+"年"+date_b.getMonth()+"月"+date_b.getDay()+"日");
+
             calendarlgq = Calendar.getInstance();
             long oldTime = calendarlgq.getTimeInMillis();
             long newTime = oldTime + (number_after*1000*60*60*24);
@@ -425,7 +440,7 @@ public void Long() {
     cancel.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            dia.dismiss();
         }
     });
     }
@@ -440,19 +455,66 @@ public void Long() {
             Toast.makeText(this,"图片的路径为"+uri.toString(),Toast.LENGTH_LONG).show();
             try{
                 bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                //Log.d("seletion","获得的图片"+(bitmap.getByteCount()/1024)+"KB");
+
                 Toast.makeText(this,"获得的图片大小为："+(bitmap.getByteCount()/1024)+"KB",Toast.LENGTH_LONG).show();
                 ImageView imageView =  findViewById(R.id.layout_background);
 
                 imageView.setImageBitmap(bitmap);
-                Toast.makeText(this,"图片被赋值",Toast.LENGTH_LONG).show();
+
             }catch(FileNotFoundException e){
                 Log.e("Exception",e.getMessage(),e);
             }
-
         }
+    }
+    //设置重复设置
+    public void Repetition(){
+        final Dialog dia;
+        LayoutInflater lay=LayoutInflater.from(this);
+        View v1=lay.inflate(R.layout.repetition_layout,null);
+        AlertDialog.Builder bui=new AlertDialog.Builder(this);
+        bui.setView(v1);
+        dia= bui.create();
+        dia.show();
+
+        repetitionItemArrayList = new ArrayList<>();
+        repetitionItemArrayList.add(new repetitionItem("每年"));
+        repetitionItemArrayList.add(new repetitionItem("每月"));
+        repetitionItemArrayList.add(new repetitionItem("每周"));
+        repetitionItemArrayList.add(new repetitionItem("自定义"));
+        repetitionItemArrayList.add(new repetitionItem("无"));
+        selfreprtitionAdapter = new repetitionAdapter(this,R.layout.repetition_layout_listview,repetitionItemArrayList);
+        Repetition_listview = v1.findViewById(R.id.repetition_listview);
+        Repetition_listview.setAdapter(selfreprtitionAdapter);
 
 
+    }
+    //设置标签设置
+    public  void Label(){
+        final Dialog dia;
+        LayoutInflater lay=LayoutInflater.from(this);
+        View v1=lay.inflate(R.layout.label_layout,null);
+        AlertDialog.Builder bui=new AlertDialog.Builder(this);
+        bui.setView(v1);
+        dia= bui.create();
+        dia.show();
+//设置确定按钮
+        Button choose_sure=v1.findViewById(R.id.button3);
+        choose_sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dia.dismiss();
+            }
+        });
+        //设置取消按钮
+        Button choose_cancel=v1.findViewById(R.id.button2);
+        choose_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dia.dismiss();
+            }
+        });
     }
     //将当时时间转换long数据
     public long transformTime(int number_day){
@@ -484,4 +546,5 @@ public void Long() {
             return day + "天" + hour + "时" + minute + "分" + second + "秒";
         }
     }
+
 }

@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     CountDownTimer downTimer,downTimer2;
     private ListView SelfListView;
     private ViewPager Selfviewpager;
-    String countdownTip="还有";
     MainActivity.mainAdapter selfSpq;
     int PictureResource=0,color_choose=0;
     private  ArrayList<Time> timeArrayList=new ArrayList<>();
@@ -176,17 +175,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK) {
+        if(resultCode == RESULT_OK) {      //新添
 
             switch (requestCode) {
                case REQUEST_CODE:
 
-                   //time_viewpager.end();
+
                     bundle = data.getExtras();
                     AllData date = (AllData) bundle.getSerializable("aa");
-                   Toast.makeText(this, date.getPicture_Str()+"11111111", Toast.LENGTH_SHORT).show();
+
                     ADD(date);
-                   //time_viewpager.start();
+
                     break;
            }
             SelfListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -197,14 +196,14 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
-        if(resultCode == RESULT_CANCELED){
+        if(resultCode == RESULT_CANCELED){   //删除
             int position=data.getIntExtra("position",-1);
             Bundle bundle2;
             bundle2=data.getExtras();
             AllData date=(AllData)bundle2.getSerializable("ee");
             DELETE(date,data.getIntExtra("deleteposition",-1));
         }
-        if(resultCode == RESULT_FIRST_USER){
+        if(resultCode == RESULT_FIRST_USER){    //编辑重来
             int position=data.getIntExtra("position",-1);
             Bundle bundle2;
             bundle2=data.getExtras();
@@ -378,10 +377,7 @@ public class MainActivity extends AppCompatActivity {
         java.util.Date date = new java.util.Date((System.currentTimeMillis()));
 
         long result = chooseTime.getTime()-date.getTime();
-        if (result>0)
-            countdownTip="还有";
-        else
-            countdownTip="已经";
+
         return result;
     }
     //返回格式化的日期和时间
@@ -451,8 +447,8 @@ public class MainActivity extends AppCompatActivity {
        PictureResource = getResources().getIdentifier(date.getPicture_Str(),"drawable",cet.getPackageName());//字符换图片
 
 
-        //Toast.makeText(this, "  成功了吗？   "+gettitleStr, Toast.LENGTH_SHORT).show();
-        selfItem.add(new mainitem(PictureResource, countdownTip+formatTime(transformTime(date.getDate())),date.getTitleStr(),date.getTimeStr(),date.getTipStr()));
+
+        selfItem.add(new mainitem(PictureResource, formatTime(transformTime(date.getDate())),date.getTitleStr(),date.getTimeStr(),date.getTipStr()));
         //selfSpq = new MainActivity.mainAdapter(this,R.layout.mainlayout,selfItem);
         //SelfListView = findViewById(R.id.mainlistview);
         //SelfListView.setAdapter(selfSpq);
