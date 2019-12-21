@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -20,7 +21,7 @@ import java.io.Serializable;
 public class detailActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 901;
     public static final int REQUEST_CODE1 = 903;
-    int  PictureResource,position;
+    int  PictureResource,position,color_choose=0;
     Bundle bundle;
     AllData date,date2;
    CountDownTimer downTimer1,downTimer2;
@@ -37,10 +38,16 @@ public class detailActivity extends AppCompatActivity {
         // switch (requestCode) {
         // case REQUEST_CODE:
         Intent data=getIntent();
-        //Toast.makeText(detailActivity.this, "你是傻瓜", Toast.LENGTH_SHORT).show();
-        //String gettitleStr = data.getStringExtra("标题名字");
-        //String getDateStr = data.getStringExtra("时间");
-        //String getPictureStr = data.getStringExtra("图片");
+        color_choose=data.getIntExtra("color", -1);
+        if(data.getIntExtra("color", -1)!=0) {
+
+            FloatingActionButton but1=findViewById(R.id.backBut_detail);
+            but1.setBackgroundTintList(ColorStateList.valueOf(data.getIntExtra("color", -1)));
+            FloatingActionButton but2=findViewById(R.id.deleteBut_detail);
+            but2.setBackgroundTintList(ColorStateList.valueOf(data.getIntExtra("color", -1)));
+            FloatingActionButton but3=findViewById(R.id.editBut_detail);
+            but3.setBackgroundTintList(ColorStateList.valueOf(data.getIntExtra("color", -1)));
+        }
        position=data.getIntExtra("position",-1);
         bundle = data.getExtras();
         date = (AllData) bundle.getSerializable("bb");
@@ -120,6 +127,7 @@ public class detailActivity extends AppCompatActivity {
                 //Intent是一种运行时绑定（run-time binding）机制，它能在程序运行过程中连接两个不同的组件。
                 // 在存放资源代码的文件夹下下，
                 Intent i = new Intent(detailActivity.this,selection.class);
+                i.putExtra("color",color_choose);
                 i.putExtra("deleteposition",position);
                 Bundle bundle1=new Bundle();
                 bundle1.putSerializable("cc",(Serializable) date);

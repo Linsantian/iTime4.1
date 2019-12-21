@@ -14,6 +14,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -99,6 +100,10 @@ public class selection extends AppCompatActivity {
         if(data.getIntExtra("color", -1)!=0) {
             ImageView imageView = findViewById(R.id.layout_background);
             imageView.setBackgroundColor(data.getIntExtra("color", -1));
+            FloatingActionButton but1=findViewById(R.id.backButton);
+            but1.setBackgroundTintList(ColorStateList.valueOf(data.getIntExtra("color", -1)));
+            FloatingActionButton but2=findViewById(R.id.yesButton);
+            but2.setBackgroundTintList(ColorStateList.valueOf(data.getIntExtra("color", -1)));
         }
             if(data.getIntExtra("State",-1) == 1){
 
@@ -176,6 +181,10 @@ public class selection extends AppCompatActivity {
         yesButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                EditText title_edit = (EditText)findViewById(R.id.title_name);
+                if(title_edit.getText().toString().isEmpty())
+                    Toast.makeText(selection.this,"标题不能为空",Toast.LENGTH_SHORT).show();
+                else{
                 //数据传输
                 EditText titlename = (EditText)findViewById(R.id.title_name);
                 String titleStr = titlename.getText().toString();
@@ -204,7 +213,7 @@ public class selection extends AppCompatActivity {
 
                 i.putExtras(bundle);
                 setResult(RESULT_OK,i);
-                finish();
+                finish();}
             }
         });
     }
@@ -516,35 +525,4 @@ public void Long() {
             }
         });
     }
-    //将当时时间转换long数据
-    public long transformTime(int number_day){
-        //获取当前系统时间
-        java.util.Date date = new java.util.Date((System.currentTimeMillis()));
-
-        long result = date.getTime()+number_day*24*60*60*1000;
-
-        return result;
-    }
-    //返回格式化的日期和时间
-    public String formatTime(long millisecond) {
-        long day = (long) ((millisecond)/1000/60/60/24);
-        long hour = (long) ((millisecond-(day*24*60*60*1000))/1000/60/60);
-        long minute = (long) ((millisecond-(day*24*60*60*1000)-(hour*60*60*1000))/1000/60);
-        long second = (long) (((millisecond-(day*24*60*60*1000)-(hour*60*60*1000)-(minute*1000*60))/1000)%60);
-
-        if(day==0){
-            if(hour==0){
-                if (minute==0){
-                    return second + "秒";
-                }else {
-                    return minute + "分" + second + "秒";
-                }
-            }else {
-                return hour+"时" + minute + "分" + second + "秒";
-            }
-        }else {
-            return day + "天" + hour + "时" + minute + "分" + second + "秒";
-        }
-    }
-
 }
