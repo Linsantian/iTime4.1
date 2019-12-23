@@ -27,7 +27,7 @@
         android:layout_marginTop="55dp"
         android:ems="10"
         android:hint="选择周期：  天"
-        android:inputType="textPersonName" />
+        android:inputType="number" />
 
     <Button
         android:id="@+id/sure_button_custom"

@@ -80,10 +80,10 @@ public class selection extends AppCompatActivity {
 
 
         selfItem = new ArrayList<>();
-        selfItem.add(new Item(R.drawable.yqcr,"日期","长按使用日期计算器"));
-        selfItem.add(new Item(R.drawable.yqcr2,"重复设置","无"));
-        selfItem.add(new Item(R.drawable.yqcr3,"图片",""));
-        selfItem.add(new Item(R.drawable.yqcr4,"添加标签",""));
+        selfItem.add(new Item(R.drawable.c1,"日期","长按使用日期计算器"));
+        selfItem.add(new Item(R.drawable.c2,"重复设置","无"));
+        selfItem.add(new Item(R.drawable.c3,"图片",""));
+        selfItem.add(new Item(R.drawable.c4,"添加标签",""));
         selfSpq = new spq(this,R.layout.layout,selfItem);
         SelfListView = findViewById(R.id.listview);
         SelfListView.setAdapter(selfSpq);
